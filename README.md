@@ -1,4 +1,4 @@
-# resttodo
+# todorest
 
 ## Project setup
 ```
