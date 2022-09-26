@@ -11,7 +11,7 @@
     <!-- 서버에러 출력 -->
     <div style="color: red">{{ error }}</div>
     <!-- 할일입력 -->
-    <TodoForm @add-todo="addTodo" />
+    <TodoForm @add-todo="addTodo" style="margin-top: 10px" />
     <!-- 목록없음 안내 -->
     <div v-if="!todos.length">추가된 Todo가 없습니다.</div>
     <!-- 할일목록 -->
@@ -20,22 +20,53 @@
       @delete-todo="deleteTodo"
       @toggle-todo="toggleTodo"
     />
+    <!-- pagenation 구현 -->
+    <PaginationView :page="page" :totalpage="totalPage" @get-todo="getTodo" />
   </div>
 </template>
 <script>
 import axios from "axios";
-import { computed, ref } from "vue";
+import { computed, ref, watch, watchEffect } from "vue";
 import TodoForm from "./components/TodoSimpleForm.vue";
 import TodoList from "./components/TodoList.vue";
+import PaginationView from "./components/PaginationView.vue";
 
 export default {
   components: {
     TodoForm,
     TodoList,
+    PaginationView,
   },
   setup() {
     const todos = ref([]);
+
+    // Pagination 구현
+    // 전체 목록수
+    const totalCount = ref(0);
+    // 페이지당 보여줄 개수
+    const limit = 5;
+    // 현재 페이지
+    const page = ref(1);
+    // 총 페이지 수
+    const totalPage = computed(() => {
+      return Math.ceil(totalCount.value / limit);
+    });
+
     const searchText = ref("");
+    // ref, reactive, computed, props 등이 변경될때 마다 실행
+    // whatchEffect 를 사용합니다.
+    watchEffect(() => {
+      // console.log(page.value);
+      // console.log(totalCount.value);
+      // console.log(filterTodos.value);
+      // console.log(totalPage.value);
+    });
+    // 변하기 이전의 값 과 현재 값을 동시에 감시한다.
+    watch(searchText, () => {
+      // 검색 기능은 추후 보완할 예정
+      // getTodo(1);
+    });
+
     const filterTodos = computed(() => {
       if (searchText.value) {
         return todos.value.filter((todo) => {
@@ -45,10 +76,18 @@ export default {
       return todos.value;
     });
 
-    const getTodo = async () => {
+    const getTodo = async (nowPage = page.value) => {
       try {
-        const response = await axios.get("http://localhost:3000/todos");
+        const response = await axios.get(
+          `http://localhost:3000/todos?_page=${nowPage}&_limit=${limit}`
+        );
         todos.value = response.data;
+
+        // 총 목록 수 를 받아야 함
+        totalCount.value = response.headers["x-total-count"];
+        page.value = nowPage;
+
+        console.log("🚀 ~ totalPage.value", totalPage.value);
       } catch (err) {
         error.value = "서버 목록 호출에 실패했습니다. 잠시 뒤 이용해 주세요";
       }
@@ -64,8 +103,9 @@ export default {
           subject: todo.subject,
           complete: todo.complete,
         });
-
         todos.value.push(todo);
+        // 목록 갱신 되었으므로 1page로 이동
+        getTodo(1);
       } catch (err) {
         error.value = "서버데이터 저장 실패";
       }
@@ -78,6 +118,9 @@ export default {
         const id = todos.value[index].id;
         await axios.delete("http://localhost:3000/todos/" + id);
         todos.value.splice(index, 1);
+
+        // 목록 갱신 되었으므로 1page로 이동
+        getTodo(page.value);
       } catch (err) {
         error.value = "삭제 요청이 거부되었습니다.";
       }
@@ -107,6 +150,9 @@ export default {
       searchText,
       filterTodos,
       error,
+      totalPage,
+      page,
+      getTodo,
     };
   },
 };
