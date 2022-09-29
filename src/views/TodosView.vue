@@ -35,12 +35,24 @@
       </button>
     </form>
     <ToastBox v-if="showToast" :message="toastMessage" :color="toastType" />
+
+    <div id="test">code</div>
   </div>
 </template>
 
 <script>
+import { useToast } from "@/composables/toast.js";
 import { useRoute, useRouter } from "vue-router";
-import { computed, ref } from "vue";
+import {
+  computed,
+  // onBeforeMount,
+  // onBeforeUnmount,
+  // onBeforeUpdate,
+  // onMounted,
+  // onUpdated,
+  // onUnmounted,
+  ref,
+} from "vue";
 import axios from "axios";
 import _ from "lodash";
 import ToastBox from "@/components/ToastBox.vue";
@@ -52,6 +64,36 @@ export default {
   setup() {
     const route = useRoute();
     const router = useRouter();
+
+    // 생명 주기 코드(LifeCycle Hooks)
+    // 화면에 보여지기전(등록) 단계
+    // : 화면을 보여주기 전에 데이터를 준비하는 Hook
+    // onBeforeMount(() => {
+    //   console.log("onBeforeMount");
+    // });
+    // 화면에 보여지(등록)는 단계
+    // onMounted(() => {
+    //   console.log("onMounted");
+    // });
+    // 화면이 갱신이 되기 전 단계
+    // onBeforeUpdate(() => {
+    //   console.log("onBeforeUpdate");
+    // });
+    // 화면이 갱신이 되고 난 후 단계
+    // onUpdated(() => {
+    //   console.log("onUpdated");
+    // });
+    // 컴포넌트가 화면에서 제거 되기 전 준비 단계
+    // : 메모리를 정리하는 곳
+    // onBeforeUnmount(() => {
+    //   console.log("onBeforeUnmount");
+    // });
+    // 컴포넌트가 완전히 제거되었을 때
+    // onUnmounted(() => {
+    //   clearTimeout(toastTimer.value);
+    //   console.log("onUnmounted");
+    // });
+
     // 데이터로딩 화면창 상태
     const loading = ref(true);
     const todo = ref(null);
@@ -107,21 +149,9 @@ export default {
     const todoState = computed(() => {
       return _.isEqual(todo.value, originalTodo.value);
     });
+    // 안내창 관련
+    const { showToast, toastMessage, toastType, triggerToast } = useToast();
 
-    // 안내창(toastbox) 관련
-    const toastMessage = ref("");
-    const toastType = ref("");
-    const showToast = ref(false);
-    const triggerToast = (message, color = "success") => {
-      toastMessage.value = message;
-      toastType.value = color;
-      showToast.value = true;
-      setTimeout(() => {
-        toastMessage.value = "";
-        toastType.value = "";
-        showToast.value = false;
-      }, 3000);
-    };
     return {
       todo,
       loading,
