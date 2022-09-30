@@ -58,4 +58,12 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+body {
+  /* width: 100%;
+  height: 100%;
+  background: url("../assets/ghibli.jpg") no-repeat center;
+  backgrou  nd-size: cover; */
+  background: rgba(75, 137, 220, 0.16);
+}
+</style>

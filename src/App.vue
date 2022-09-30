@@ -31,6 +31,21 @@
             >
           </li>
           <li class="nav-item">
+            <RouterLink class="nav-link" :to="{ name: 'TodoCreate' }"
+              >TodoCreate</RouterLink
+            >
+          </li>
+          <li class="nav-item">
+            <RouterLink class="nav-link" :to="{ name: 'About' }"
+              >About</RouterLink
+            >
+          </li>
+          <li class="nav-item">
+            <RouterLink class="nav-link" :to="{ name: 'Profile' }"
+              >Profile</RouterLink
+            >
+          </li>
+          <li class="nav-item">
             <a
               class="nav-link"
               href="https://github.com/ehdyd963741/todorest.git"
@@ -42,9 +57,61 @@
       </div>
     </div>
   </nav>
-  <RouterView />
+  <RouterView
+    @update-todo-toast="updateTodoToast"
+    @new-todo-toast="newTodoToast"
+    @update-load-fail-toast="updateLoadFailToast"
+    @update-todo-fail-toast="updateTodoFailToast"
+    @err-subject-toast="errSubjectToast"
+    @new-todo-fail-toast="newTodoFailToast"
+  />
+  <ToastBox v-if="showToast" :message="toastMessage" :color="toastType" />
 </template>
-<script></script>
+<script>
+import ToastBox from "@/components/ToastBox.vue";
+import { useToast } from "@/composables/toast";
+export default {
+  components: {
+    ToastBox,
+  },
+  setup() {
+    // 안내창 관련
+    const { showToast, toastMessage, toastType, triggerToast } = useToast();
+
+    const updateTodoToast = () => {
+      triggerToast("내용이 업데이트 되었습니다.");
+    };
+    const newTodoToast = () => {
+      triggerToast("새글이 등록 되었습니다.");
+    };
+    const updateLoadFailToast = () => {
+      triggerToast("내용을 가지고 오는데 실패하였습니다", "danger");
+    };
+    const updateTodoFailToast = () => {
+      triggerToast("업데이트에 실패하였습니다", "danger");
+    };
+    const errSubjectToast = () => {
+      triggerToast("제목을 입력하세요", "danger");
+    };
+    const newTodoFailToast = () => {
+      triggerToast("새글등록에 실패하였습니다", "danger");
+    };
+    return {
+      updateTodoToast,
+      newTodoToast,
+      updateLoadFailToast,
+      updateTodoFailToast,
+      errSubjectToast,
+      newTodoFailToast,
+
+      showToast,
+      toastMessage,
+      toastType,
+      triggerToast,
+    };
+  },
+};
+</script>
 <style>
 #app {
 }
