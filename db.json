@@ -21,24 +21,28 @@
       "complete": false
     },
     {
-      "id": 1664415705968,
-      "subject": "5",
-      "complete": false
+      "subject": "삭제 모달창 오류코드 이유",
+      "complete": false,
+      "body": "// 모달 기능\n    const showModal = ref(false);\n    const deleteId = ref(null);\n    const openModal = (id) => {\n      deleteId.value = id;\n      showModal.value = true;\n    };\n    const closeModal = () => {\n      showModal.value = false;\n    };\n    const onDelete = () => {\n      deleteTodo(deleteId.value); <----.value값을 적지 않아서 오류가 떳음\n      showModal.value = false;\n    };",
+      "id": 1664415705969
     },
     {
-      "id": 1664415706256,
-      "subject": "6",
-      "complete": false
+      "subject": "1",
+      "complete": false,
+      "body": "1",
+      "id": 1664415705970
     },
     {
-      "id": 1664415706592,
-      "subject": "7",
-      "complete": false
+      "subject": "1",
+      "complete": false,
+      "body": "1",
+      "id": 1664415705971
     },
     {
-      "id": 1664415706888,
-      "subject": "8",
-      "complete": false
+      "subject": "1",
+      "complete": false,
+      "body": "1",
+      "id": 1664415705972
     }
   ]
 }

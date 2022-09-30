@@ -11,23 +11,37 @@
           />
           <label
             @click="moveToPage(item.id)"
+            style="cursor: pointer"
             class="form-check-label"
             v-bind:class="{ todostyle: item.complete }"
             >{{ item.subject }}
           </label>
         </div>
-        <button class="btn btn-danger btn-sm" @click="deleteTodo(index)">
+        <button class="btn btn-danger btn-sm" @click="openModal(item.id)">
           Delete
         </button>
-        <div></div>
       </div>
     </div>
+
+    <teleport to="#modal">
+      <ModalWin v-if="showModal" @close-modal="closeModal" @delete="onDelete">
+        <template v-slot:title> 할일 삭제 </template>
+        <template v-slot:body>
+          삭제 하시겠습니까? <button>버튼</button></template
+        >
+      </ModalWin>
+    </teleport>
   </div>
 </template>
 
 <script>
+import { ref } from "vue";
 import { useRouter } from "vue-router";
+import ModalWin from "@/components/ModalWin.vue";
 export default {
+  components: {
+    ModalWin,
+  },
   props: ["todos"],
   emits: ["delete-todo", "toggle-todo"],
   setup(props, { emit }) {
@@ -49,10 +63,30 @@ export default {
         },
       });
     };
+
+    // 모달 기능
+    const showModal = ref(false);
+    const deleteId = ref(null);
+    const openModal = (id) => {
+      deleteId.value = id;
+      showModal.value = true;
+    };
+    const closeModal = () => {
+      showModal.value = false;
+    };
+    const onDelete = () => {
+      deleteTodo(deleteId.value);
+      showModal.value = false;
+    };
     return {
       deleteTodo,
       toggleTodo,
       moveToPage,
+
+      showModal,
+      openModal,
+      closeModal,
+      onDelete,
     };
   },
 };
@@ -60,10 +94,6 @@ export default {
 
 <style>
 body {
-  /* width: 100%;
-  height: 100%;
-  background: url("../assets/ghibli.jpg") no-repeat center;
-  backgrou  nd-size: cover; */
   background: rgba(75, 137, 220, 0.16);
 }
 </style>
