@@ -64,6 +64,9 @@
     @update-todo-fail-toast="updateTodoFailToast"
     @err-subject-toast="errSubjectToast"
     @new-todo-fail-toast="newTodoFailToast"
+    @list-load-fail-toast="listLoadFailToast"
+    @delete-todo-toast="deleteTodoToast"
+    @delete-todo-fail="deleteTodoFailToast"
   />
   <ToastBox v-if="showToast" :message="toastMessage" :color="toastType" />
 </template>
@@ -96,6 +99,16 @@ export default {
     const newTodoFailToast = () => {
       triggerToast("새글등록에 실패하였습니다", "danger");
     };
+    const listLoadFailToast = () => {
+      triggerToast("목록 호출에 실패하였습니다.", "danger");
+    };
+    const deleteTodoToast = () => {
+      triggerToast("삭제 하였습니다.");
+    };
+    const deleteTodoFailToast = () => {
+      triggerToast("삭제에 실패하였습니다", "danger");
+    };
+
     return {
       updateTodoToast,
       newTodoToast,
@@ -103,6 +116,9 @@ export default {
       updateTodoFailToast,
       errSubjectToast,
       newTodoFailToast,
+      listLoadFailToast,
+      deleteTodoToast,
+      deleteTodoFailToast,
 
       showToast,
       toastMessage,
