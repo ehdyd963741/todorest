@@ -7,9 +7,9 @@
       "id": 1
     },
     {
-      "subject": "test2 delete",
+      "subject": "test-3 close",
       "complete": false,
-      "body": "test2",
+      "body": "close 잘 댐",
       "id": 2
     }
   ]

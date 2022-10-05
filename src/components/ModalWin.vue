@@ -28,10 +28,10 @@
 
 <script>
 export default {
-  emits: ["close-modal"],
+  emits: ["close"],
   setup(props, { emit }) {
     const onClose = () => {
-      emit("close-modal", {});
+      emit("close", {});
     };
 
     return {
