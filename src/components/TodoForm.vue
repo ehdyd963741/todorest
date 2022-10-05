@@ -61,7 +61,7 @@
 <script>
 import { useRoute, useRouter } from "vue-router";
 import { computed, ref } from "vue";
-import axios from "axios";
+import axios from "@/api/axios";
 import _ from "lodash";
 import InputView from "@/components/InputView.vue";
 export default {
@@ -98,9 +98,7 @@ export default {
     const getTodo = async () => {
       loading.value = true;
       try {
-        const response = await axios.get(
-          `http://localhost:3000/todos/${route.params.id}`
-        );
+        const response = await axios.get(`todos/${route.params.id}`);
 
         todo.value = { ...response.data };
         originalTodo.value = { ...response.data };
@@ -140,15 +138,12 @@ export default {
         };
         if (props.editing) {
           // 수정 axios 실행
-          res = await axios.put(
-            `http://localhost:3000/todos/${todo.value.id}`,
-            data
-          );
+          res = await axios.put(`todos/${todo.value.id}`, data);
           originalTodo.value = { ...res.data };
           emit("update-todo", {});
         } else {
           // 신규 등록 axios 실행
-          res = await axios.post(`http://localhost:3000/todos/`, data);
+          res = await axios.post(`todos/`, data);
           todo.value.subject = "";
           todo.value.body = "";
           emit("new-todo", {});
