@@ -1,11 +1,14 @@
 <template>
-  <NavBar />
-  <RouterView />
-  <Transition name="fade">
-    <ToastBox />
-  </Transition>
+  <div>
+    <NavBar />
+    <RouterView />
+    <Transition name="fade">
+      <ToastBox />
+    </Transition>
+  </div>
 </template>
 <script>
+import { useStore } from "vuex";
 import ToastBox from "@/components/ToastBox.vue";
 import NavBar from "@/components/NavBar.vue";
 export default {
@@ -14,6 +17,24 @@ export default {
     NavBar,
   },
   setup() {
+    const store = useStore();
+    const getCookie = () => {
+      let x, y;
+      let val = document.cookie.split(";");
+      for (let i = 0; i < val.length; i++) {
+        x = val[i].substr(0, val[i].indexOf("="));
+        y = val[i].substr(val[i].indexOf("=") + 1);
+        x = x.replace(/^\s+|\s+$/g, ""); // 앞과 뒤의 공백 제거하기
+        if (x == "loginState") {
+          let temp = unescape(y);
+          if (temp == "success") {
+            store.dispatch("kakao/loginStateSuccess");
+          }
+          // return unescape(y); // unescape로 디코딩 후 값 리턴
+        }
+      }
+    };
+    getCookie();
     return {};
   },
 };
@@ -24,7 +45,7 @@ export default {
 
 .fade-enter-active,
 .fade-leave-active {
-  transition: all 0.3s ease;
+  transition: all 0.5s ease;
 }
 
 .fade-enter-from,

@@ -5,12 +5,18 @@ export default {
     profile: {},
     loginState: false,
   },
-  acctions: {
-    LoginKKO({ commit }, { email, profile }) {
+  actions: {
+    loginKKO({ commit }, { email, profile }) {
+      console.log("--------------");
+      console.log(email);
+      console.log(profile);
       commit("LOGIN_KKO", { email, profile });
     },
-    LogOutKKO({ commit }) {
+    logOutKKO({ commit }) {
       commit("LOGOUT_KKO");
+    },
+    loginStateSuccess({ commit }) {
+      commit("LOGIN_STATUS_SUCCESS");
     },
   },
   mutations: {
@@ -23,6 +29,9 @@ export default {
       state.email = "";
       state.profile = {};
       state.loginState = false;
+    },
+    LOGIN_STATUS_SUCCESS(state) {
+      state.loginState = true;
     },
   },
   getters: {

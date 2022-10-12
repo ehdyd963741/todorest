@@ -42,6 +42,7 @@ export default {
     const router = useRouter();
     const store = useStore();
     const loginState = computed(() => store.getters["kakao/getLoginState"]);
+
     const gotoTodos = () => {
       if (!loginState.value) {
         alert("로그인을 하세요.");
